@@ -537,12 +537,10 @@ function registerIpc(): void {
     if (!mainWindow) {
       return;
     }
-    const bounds = mainWindow.getBounds();
-    mainWindow.setBounds({
-      ...bounds,
-      x: bounds.x + dx,
-      y: bounds.y + dy
-    });
+    const [x, y] = mainWindow.getPosition();
+    // Only update window position while dragging. Re-applying bounds can cause
+    // transparent frameless windows to accumulate platform-specific size drift.
+    mainWindow.setPosition(x + dx, y + dy);
   });
 
   ipcMain.on("drag-lock", (_event, locked: boolean) => {
