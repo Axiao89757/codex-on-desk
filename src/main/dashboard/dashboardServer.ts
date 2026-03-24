@@ -20,7 +20,9 @@ export class DashboardServer {
   private readonly options: DashboardServerOptions;
   private readonly clients = new Map<number, SseClient>();
   private server = createServer((request, response) => {
-    void this.handleRequest(request, response);
+    void this.handleRequest(request, response).catch((error) => {
+      this.respondWithError(response, error);
+    });
   });
   private nextClientId = 1;
 
@@ -166,6 +168,17 @@ export class DashboardServer {
       "Content-Type": contentTypeForPath(absolutePath)
     });
     response.end(contents);
+  }
+
+  private respondWithError(response: ServerResponse, error: unknown): void {
+    if (response.headersSent) {
+      response.end();
+      return;
+    }
+
+    this.json(response, 500, {
+      error: error instanceof Error ? error.message : String(error)
+    });
   }
 
   private json(response: ServerResponse, statusCode: number, body: unknown): void {

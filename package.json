@@ -1,6 +1,6 @@
 {
   "name": "codex-on-desk",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -10,10 +10,10 @@
     "dashboard": "tsx scripts/dashboard.ts",
     "build:electron": "tsc -p tsconfig.electron.json",
     "electron": "npm run build:electron && electron dist/electron/electron/main.js",
-    "dist": "npm run build:electron && electron-builder",
-    "dist:dir": "npm run build:electron && electron-builder --dir",
-    "dist:mac": "npm run build:electron && electron-builder --mac",
-    "dist:win": "npm run build:electron && electron-builder --win",
+    "dist": "npm run build:electron && npm exec --yes --package electron-builder@26.8.1 electron-builder",
+    "dist:dir": "npm run build:electron && npm exec --yes --package electron-builder@26.8.1 electron-builder -- --dir",
+    "dist:mac": "npm run build:electron && npm exec --yes --package electron-builder@26.8.1 electron-builder -- --mac",
+    "dist:win": "npm run build:electron && npm exec --yes --package electron-builder@26.8.1 electron-builder -- --win",
     "schema:generate": "sh scripts/generate-codex-schema.sh",
     "typecheck": "tsc --noEmit"
   },
@@ -26,6 +26,7 @@
     },
     "files": [
       "dist/**/*",
+      "src/dashboard/**/*",
       "src/electron/assets/**/*",
       "src/electron/renderer/**/*",
       "package.json"
@@ -56,7 +57,6 @@
   "devDependencies": {
     "@types/node": "^24.6.0",
     "electron": "^41.0.3",
-    "electron-builder": "^26.8.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }

@@ -51,6 +51,20 @@ npm install
 npm.cmd install
 ```
 
+默认安装会保留 `electron` 运行时，但不再预装 `electron-builder`。
+只有执行 `npm run dist` / `npm run dist:*` 时，才会按需下载固定版本的 `electron-builder`，这样能缩短日常 `npm install`。
+
+仓库内的 `.npmrc` 已默认关闭 `audit` / `fund` / `progress`，并开启 `prefer-offline` 与更高的并发连接数。
+
+如果是 Electron 二进制下载慢，可以在安装前临时指定镜像：
+
+```bash
+$env:ELECTRON_MIRROR="https://your-electron-mirror/electron/"
+npm.cmd install
+```
+
+把 `https://your-electron-mirror/electron/` 替换成你实际可用的 Electron 镜像地址即可。
+
 启动桌宠：
 
 ```bash
@@ -191,6 +205,8 @@ npm run build:electron
 
 ## 打包
 
+`dist` 系列脚本会在首次执行时按需下载 `electron-builder@26.8.1`，后续通常会直接命中 npm 缓存。
+
 本机目录包：
 
 ```bash
@@ -217,19 +233,19 @@ npm run dist:mac
 Apple Silicon `arm64`：
 
 ```bash
-npx electron-builder --mac dmg zip --arm64
+npm run dist:mac -- --arm64
 ```
 
 Intel `x64`：
 
 ```bash
-npx electron-builder --mac dmg zip --x64
+npm run dist:mac -- --x64
 ```
 
 Universal：
 
 ```bash
-npx electron-builder --mac dmg zip --universal
+npm run dist:mac -- --universal
 ```
 
 说明：
@@ -254,7 +270,7 @@ npm run dist:win
 显式指定 `x64`：
 
 ```bash
-npx electron-builder --win nsis zip --x64
+npm run dist:win -- --x64
 ```
 
 说明：
